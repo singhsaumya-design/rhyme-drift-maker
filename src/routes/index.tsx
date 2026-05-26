@@ -141,7 +141,7 @@ function Index() {
       </header>
 
       {/* Main content */}
-      <section className="relative z-10 flex-1 flex flex-col items-center px-4 md:px-6 pb-6 min-h-0 pt-[42vh]">
+      <section className="relative z-10 flex-1 flex flex-col items-center px-4 md:px-6 pb-6 min-h-0 pt-4">
         <div className="w-full max-w-xl flex-1 flex flex-col min-h-0 items-center">
           {/* Feed */}
           <div
