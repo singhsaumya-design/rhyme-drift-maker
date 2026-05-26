@@ -71,18 +71,6 @@ function Index() {
     }
   }
 
-  // Reveal lines one by one on done
-  useEffect(() => {
-    if (phase !== "done" || lines.length === 0) {
-      setRevealed(0);
-      return;
-    }
-    setRevealed(0);
-    const timers = lines.map((_, i) =>
-      setTimeout(() => setRevealed((r) => Math.max(r, i + 1)), 250 + i * 600),
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [phase, lines]);
 
   function tryAgain() {
     setLines([]);
