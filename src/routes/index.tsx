@@ -138,10 +138,10 @@ function Index() {
       </header>
 
       {/* Main content */}
-      <section className="relative z-10 flex-1 flex flex-col items-center px-4 md:px-6 pb-6 min-h-0">
-        <div className="w-full max-w-2xl flex-1 flex flex-col min-h-0">
+      <section className="relative z-10 flex-1 flex flex-col items-center px-4 md:px-6 pb-6 min-h-0 pt-[42vh]">
+        <div className="w-full max-w-xl flex-1 flex flex-col min-h-0 items-center">
           {/* Feed */}
-          <div className="flex-1 overflow-y-auto py-6 pr-1 scroll-smooth">
+          <div className="w-full flex-1 overflow-y-auto py-6 scroll-smooth">
             {feed.length === 0 && phase !== "done" && (
               <p
                 className="text-center text-[#3b2f55]/70 italic text-lg md:text-xl"
@@ -150,14 +150,14 @@ function Index() {
                 a soft beginning &mdash; type something
               </p>
             )}
-            <ul className="space-y-6">
+            <ul className="space-y-6 text-center">
               {feed.map((item, i) => (
                 <li
                   key={i}
                   className="animate-[fadeUp_600ms_ease-out]"
                 >
                   {item.kind === "user" ? (
-                    <div className="flex flex-col items-start">
+                    <div className="flex flex-col items-center">
                       <span className="text-[10px] lowercase tracking-[0.3em] text-[#6b5b8a] mb-1">
                         you whispered
                       </span>
@@ -166,7 +166,7 @@ function Index() {
                       </p>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-end text-right">
+                    <div className="flex flex-col items-center text-center">
                       <span className="text-[10px] lowercase tracking-[0.3em] text-[#c5648a] mb-1">
                         the sky replied
                       </span>
@@ -181,7 +181,7 @@ function Index() {
                 </li>
               ))}
               {phase === "thinking" && (
-                <li className="flex flex-col items-end text-right animate-pulse">
+                <li className="flex flex-col items-center text-center animate-pulse">
                   <span className="text-[10px] lowercase tracking-[0.3em] text-[#c5648a] mb-1">
                     the sky is humming
                   </span>
@@ -195,7 +195,7 @@ function Index() {
           </div>
 
           {phase !== "done" && (
-            <form onSubmit={submit} className="pt-4">
+            <form onSubmit={submit} className="pt-4 w-full">
               <label
                 htmlFor="words"
                 className="block text-center text-[11px] lowercase tracking-[0.3em] text-[#6b5b8a] mb-3"
