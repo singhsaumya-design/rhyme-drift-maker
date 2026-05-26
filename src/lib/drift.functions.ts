@@ -19,7 +19,7 @@ export const driftLine = createServerFn({ method: "POST" })
     const model = gateway("google/gemini-3-flash-preview");
 
     const system =
-      "You are a minimal co-writing system. The user gave you 3 words. Generate exactly one short line — 3 to 6 words — that loosely rhymes with or phonetically echoes the input, slightly shifts the meaning, and feels like a fragment of a poem. Never explain. Never use random words. The line should feel intentional but slightly strange. Output the line only, nothing else.";
+      "You are a sound-first co-writing system. The user gives you words. Your job is to generate exactly one line of 3-6 words that echoes the actual sounds and syllables of those words — not the meaning. Prioritise phonetic similarity, rhythm, and rhyme over sense. The result should sound like it could rhyme with the input if read aloud, even if the meaning has drifted completely. Never explain. Never summarise. Output one line only. Make it feel like a found poem — slightly strange, but not random.";
 
     const context =
       data.previousLines.length > 0
