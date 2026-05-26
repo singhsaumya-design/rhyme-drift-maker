@@ -25,16 +25,19 @@ function Index() {
   const [lines, setLines] = useState<string[]>([]);
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const feedEndRef = useRef<HTMLDivElement>(null);
+  const feedContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (phase === "input") inputRef.current?.focus();
   }, [phase, round]);
 
   useEffect(() => {
-    feedEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const el = feedContainerRef.current;
+    if (el) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    }
   }, [feed, phase]);
 
   async function submit(e: FormEvent) {
@@ -94,7 +97,7 @@ function Index() {
 
   return (
     <main
-      className="relative min-h-screen flex flex-col overflow-hidden"
+      className="relative h-screen flex flex-col overflow-hidden"
       style={{
         fontFamily: '"Inter", system-ui, sans-serif',
         color: "#2a2342",
@@ -141,7 +144,10 @@ function Index() {
       <section className="relative z-10 flex-1 flex flex-col items-center px-4 md:px-6 pb-6 min-h-0 pt-[42vh]">
         <div className="w-full max-w-xl flex-1 flex flex-col min-h-0 items-center">
           {/* Feed */}
-          <div className="w-full flex-1 overflow-y-auto py-6 scroll-smooth">
+          <div
+            ref={feedContainerRef}
+            className="w-full flex-1 overflow-y-auto py-6 scroll-smooth min-h-0"
+          >
             {feed.length === 0 && phase !== "done" && (
               <p
                 className="text-center text-[#3b2f55]/70 italic text-lg md:text-xl"
@@ -191,7 +197,6 @@ function Index() {
                 </li>
               )}
             </ul>
-            <div ref={feedEndRef} />
           </div>
 
           {phase !== "done" && (
