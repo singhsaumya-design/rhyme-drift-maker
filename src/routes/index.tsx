@@ -280,38 +280,40 @@ function Bird({ className = "", delay = "0s", duration = "7s", color = "#4a2b5c"
       aria-hidden
       viewBox="0 0 120 60"
       className={`pointer-events-none absolute ${className}`}
-      style={{ animation: `drift ${duration} ease-in-out infinite`, animationDelay: delay }}
+      style={{ animation: `birdDrift ${duration} ease-in-out infinite`, animationDelay: delay }}
     >
-      {/* far wing */}
-      <path
-        d="M24 32 C32 14 52 10 58 22 C52 20 36 24 24 32Z"
-        fill={wingFill}
-        opacity="0.35"
-      />
-      {/* body */}
-      <ellipse cx="58" cy="28" rx="14" ry="7" fill={bodyFill} opacity="0.45" />
-      {/* near wing */}
-      <path
-        d="M30 34 C38 12 62 8 70 22 C62 20 44 24 30 34Z"
-        fill={wingFill}
-        opacity="0.55"
-      />
-      {/* tail */}
-      <path
-        d="M44 28 L24 22 L28 30 Z"
-        fill={bodyFill}
-        opacity="0.4"
-      />
-      {/* head */}
-      <circle cx="70" cy="24" r="4.5" fill={bodyFill} opacity="0.6" />
-      {/* beak */}
-      <path
-        d="M73 24 L78 22 L73 26 Z"
-        fill={bodyFill}
-        opacity="0.7"
-      />
-      {/* eye */}
-      <circle cx="71" cy="23" r="1" fill="#ffffff" opacity="0.85" />
+      <g style={{ animation: `wingFlap ${duration} ease-in-out infinite`, animationDelay: delay }}>
+        {/* far wing */}
+        <path
+          d="M24 32 C32 14 52 10 58 22 C52 20 36 24 24 32Z"
+          fill={wingFill}
+          opacity="0.35"
+        />
+        {/* body */}
+        <ellipse cx="58" cy="28" rx="14" ry="7" fill={bodyFill} opacity="0.45" />
+        {/* near wing */}
+        <path
+          d="M30 34 C38 12 62 8 70 22 C62 20 44 24 30 34Z"
+          fill={wingFill}
+          opacity="0.55"
+        />
+        {/* tail */}
+        <path
+          d="M44 28 L24 22 L28 30 Z"
+          fill={bodyFill}
+          opacity="0.4"
+        />
+        {/* head */}
+        <circle cx="70" cy="24" r="4.5" fill={bodyFill} opacity="0.6" />
+        {/* beak */}
+        <path
+          d="M73 24 L78 22 L73 26 Z"
+          fill={bodyFill}
+          opacity="0.7"
+        />
+        {/* eye */}
+        <circle cx="71" cy="23" r="1" fill="#ffffff" opacity="0.85" />
+      </g>
     </svg>
   );
 }
