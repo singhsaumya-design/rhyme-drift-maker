@@ -13,42 +13,55 @@ function wordCount(s: string) {
   return s.trim().split(/\s+/).filter(Boolean).length;
 }
 
+type FeedItem =
+  | { kind: "user"; text: string; round: number }
+  | { kind: "system"; text: string; round: number };
+
 function Index() {
   const drift = useServerFn(driftLine);
   const [round, setRound] = useState(1); // 1..3
   const [phase, setPhase] = useState<Phase>("input");
   const [input, setInput] = useState("");
   const [lines, setLines] = useState<string[]>([]);
+  const [feed, setFeed] = useState<FeedItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const feedEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (phase === "input") inputRef.current?.focus();
   }, [phase, round]);
 
+  useEffect(() => {
+    feedEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [feed, phase]);
+
   async function submit(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    if (wordCount(input) !== 3) {
-      setError("Enter exactly 3 words.");
+    if (wordCount(input) < 1) {
+      setError("Type something.");
       return;
     }
     const words = input.trim();
+    const currentRound = round;
+    setFeed((f) => [...f, { kind: "user", text: words, round: currentRound }]);
     setPhase("thinking");
     const delay = 200 + Math.random() * 300;
     try {
       const [{ line }] = await Promise.all([
-        drift({ data: { words, previousLines: lines, round } }),
+        drift({ data: { words, previousLines: lines, round: currentRound } }),
         new Promise((r) => setTimeout(r, delay)),
       ]);
       const nextLines = [...lines, line];
       setLines(nextLines);
+      setFeed((f) => [...f, { kind: "system", text: line, round: currentRound }]);
       setInput("");
-      if (round >= 3) {
+      if (currentRound >= 3) {
         setPhase("done");
       } else {
-        setRound(round + 1);
+        setRound(currentRound + 1);
         setPhase("input");
       }
     } catch (err) {
@@ -73,6 +86,7 @@ function Index() {
 
   function tryAgain() {
     setLines([]);
+    setFeed([]);
     setRound(1);
     setError(null);
     setInput("");
@@ -81,13 +95,14 @@ function Index() {
 
   function newDrift() {
     setLines([]);
+    setFeed([]);
     setRound(1);
     setError(null);
     setInput("");
     setPhase("input");
   }
 
-  const prompt = round === 1 ? "Enter 3 words" : "keep going — 3 more words";
+  const prompt = round === 1 ? "Type something fun" : "keep going";
 
   return (
     <main className="min-h-screen bg-[#fcfbf8] text-neutral-900 flex flex-col">
@@ -100,43 +115,81 @@ function Index() {
         </span>
       </header>
 
-      <section className="flex-1 flex items-center justify-center px-6">
-        <div className="w-full max-w-xl">
-          {phase !== "done" && (
-            <div className="space-y-10">
-              {/* Accumulated lines so far — the poem-in-progress */}
-              {lines.length > 0 && (
-                <ol className="space-y-3 font-serif">
-                  {lines.map((l, i) => (
-                    <li
-                      key={i}
-                      className="text-xl md:text-2xl italic text-neutral-700 leading-snug animate-[fadeUp_600ms_ease-out]"
-                    >
-                      {l}
-                    </li>
-                  ))}
-                </ol>
+      <section className="flex-1 flex flex-col items-center px-6 overflow-hidden">
+        <div className="w-full max-w-xl flex-1 flex flex-col min-h-0">
+          {/* Persistent scrollable feed */}
+          <div className="flex-1 overflow-y-auto py-8 pr-2">
+            {feed.length === 0 && phase !== "done" && (
+              <p className="text-neutral-300 text-sm tracking-wider uppercase">
+                a blank page —
+              </p>
+            )}
+            <ul className="space-y-5">
+              {feed.map((item, i) => (
+                <li
+                  key={i}
+                  className={
+                    item.kind === "user"
+                      ? "text-lg md:text-xl font-light text-neutral-900 animate-[fadeUp_500ms_ease-out]"
+                      : "pl-8 md:pl-12 text-xl md:text-2xl italic font-serif text-neutral-600 leading-snug animate-[fadeUp_600ms_ease-out]"
+                  }
+                >
+                  {item.kind === "user" ? (
+                    <>
+                      <span className="mr-3 text-[10px] tracking-[0.25em] uppercase text-neutral-400 align-middle">
+                        you
+                      </span>
+                      {item.text}
+                    </>
+                  ) : (
+                    <>
+                      <span className="mr-3 text-[10px] tracking-[0.25em] uppercase text-neutral-400 not-italic align-middle">
+                        drift
+                      </span>
+                      {item.text}
+                    </>
+                  )}
+                </li>
+              ))}
+              {phase === "thinking" && (
+                <li className="pl-8 md:pl-12 text-sm italic text-neutral-400">
+                  drifting…
+                </li>
               )}
+            </ul>
+            <div ref={feedEndRef} />
+          </div>
 
-              <form onSubmit={submit} className="space-y-4">
+          {phase !== "done" && (
+            <div className="border-t border-neutral-200 py-5">
+              <form onSubmit={submit} className="space-y-3">
                 <label
                   htmlFor="words"
                   className="block text-xs uppercase tracking-[0.25em] text-neutral-500"
                 >
                   {prompt}
                 </label>
-                <input
-                  id="words"
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={phase === "thinking"}
-                  autoComplete="off"
-                  spellCheck={false}
-                  className="w-full bg-transparent border-0 border-b border-neutral-300 focus:border-neutral-900 outline-none py-3 text-2xl md:text-3xl font-light tracking-tight placeholder:text-neutral-300 transition-colors disabled:opacity-40"
-                  placeholder="three   small   words"
-                />
-                <div className="flex items-center justify-between pt-2">
+                <div className="flex items-end gap-4">
+                  <input
+                    id="words"
+                    ref={inputRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    disabled={phase === "thinking"}
+                    autoComplete="off"
+                    spellCheck={false}
+                    className="flex-1 bg-transparent border-0 border-b border-neutral-300 focus:border-neutral-900 outline-none py-2 text-xl md:text-2xl font-light tracking-tight placeholder:text-neutral-300 transition-colors disabled:opacity-40"
+                    placeholder="Type here"
+                  />
+                  <button
+                    type="submit"
+                    disabled={phase === "thinking"}
+                    className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 disabled:opacity-30 transition pb-2"
+                  >
+                    {phase === "thinking" ? "…" : "Continue"}
+                  </button>
+                </div>
+                <div className="flex items-center justify-between">
                   <span
                     className={`text-xs tracking-wider ${
                       error ? "text-red-500" : "text-neutral-400"
@@ -144,25 +197,21 @@ function Index() {
                   >
                     {error ?? (phase === "thinking" ? "drifting…" : "press enter")}
                   </span>
-                  <button
-                    type="submit"
-                    disabled={phase === "thinking"}
-                    className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 disabled:opacity-30 transition"
-                  >
-                    {phase === "thinking" ? "…" : "→"}
-                  </button>
                 </div>
               </form>
             </div>
           )}
 
           {phase === "done" && (
-            <div className="space-y-12">
-              <ol className="space-y-4 font-serif">
+            <div className="border-t border-neutral-200 py-6 space-y-5">
+              <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
+                the drift — final
+              </p>
+              <ol className="space-y-2 font-serif">
                 {lines.map((l, i) => (
                   <li
                     key={i}
-                    className={`text-2xl md:text-4xl italic leading-tight transition-all duration-700 ${
+                    className={`text-xl md:text-2xl italic leading-snug transition-all duration-700 ${
                       i < revealed
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-2"
@@ -172,9 +221,8 @@ function Index() {
                   </li>
                 ))}
               </ol>
-
               <div
-                className={`flex gap-6 transition-opacity duration-700 ${
+                className={`flex gap-6 pt-2 transition-opacity duration-700 ${
                   revealed >= lines.length ? "opacity-100" : "opacity-0"
                 }`}
               >
