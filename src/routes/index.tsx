@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { driftLine, finalizeDrift } from "@/lib/drift.functions";
+import { driftLine } from "@/lib/drift.functions";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -15,13 +15,10 @@ function wordCount(s: string) {
 
 function Index() {
   const drift = useServerFn(driftLine);
-  const finalize = useServerFn(finalizeDrift);
   const [round, setRound] = useState(1); // 1..3
   const [phase, setPhase] = useState<Phase>("input");
   const [input, setInput] = useState("");
   const [lines, setLines] = useState<string[]>([]);
-  const [finalLines, setFinalLines] = useState<string[] | null>(null);
-  const [finalizing, setFinalizing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -61,46 +58,21 @@ function Index() {
     }
   }
 
-  // Finalize: ask AI to lightly edit/reorder into a coherent 3-line poem
-  useEffect(() => {
-    if (phase !== "done" || lines.length !== 3 || finalLines || finalizing) return;
-    let cancelled = false;
-    setFinalizing(true);
-    finalize({ data: { lines: lines as [string, string, string] & string[] } })
-      .then((res) => {
-        if (cancelled) return;
-        const out = res.lines && res.lines.length === 3 ? res.lines : lines;
-        setFinalLines(out);
-      })
-      .catch((err) => {
-        console.error(err);
-        if (!cancelled) setFinalLines(lines);
-      })
-      .finally(() => {
-        if (!cancelled) setFinalizing(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [phase, lines, finalLines, finalizing, finalize]);
-
   // Reveal lines one by one on done
   useEffect(() => {
-    if (phase !== "done" || !finalLines) {
+    if (phase !== "done" || lines.length === 0) {
       setRevealed(0);
       return;
     }
     setRevealed(0);
-    const timers = finalLines.map((_, i) =>
+    const timers = lines.map((_, i) =>
       setTimeout(() => setRevealed((r) => Math.max(r, i + 1)), 250 + i * 600),
     );
     return () => timers.forEach(clearTimeout);
-  }, [phase, finalLines]);
+  }, [phase, lines]);
 
   function tryAgain() {
-    // Re-drift from the same starting words: clear lines, restart at round 1 with previous first input prefilled
     setLines([]);
-    setFinalLines(null);
     setRound(1);
     setError(null);
     setInput("");
@@ -109,15 +81,13 @@ function Index() {
 
   function newDrift() {
     setLines([]);
-    setFinalLines(null);
     setRound(1);
     setError(null);
     setInput("");
     setPhase("input");
   }
 
-  const prompt = round === 1 ? "Enter 3 words" : "Continue in 3 words";
-  const lastLine = lines[lines.length - 1];
+  const prompt = round === 1 ? "Enter 3 words" : "keep going — 3 more words";
 
   return (
     <main className="min-h-screen bg-[#fcfbf8] text-neutral-900 flex flex-col">
@@ -134,17 +104,19 @@ function Index() {
         <div className="w-full max-w-xl">
           {phase !== "done" && (
             <div className="space-y-10">
-              {/* Echo of latest system line */}
-              <div className="min-h-[3.5rem] flex items-end">
-                {lastLine && (
-                  <p
-                    key={lastLine}
-                    className="text-2xl md:text-3xl font-serif italic text-neutral-700 leading-snug animate-[fadeUp_600ms_ease-out]"
-                  >
-                    {lastLine}
-                  </p>
-                )}
-              </div>
+              {/* Accumulated lines so far — the poem-in-progress */}
+              {lines.length > 0 && (
+                <ol className="space-y-3 font-serif">
+                  {lines.map((l, i) => (
+                    <li
+                      key={i}
+                      className="text-xl md:text-2xl italic text-neutral-700 leading-snug animate-[fadeUp_600ms_ease-out]"
+                    >
+                      {l}
+                    </li>
+                  ))}
+                </ol>
+              )}
 
               <form onSubmit={submit} className="space-y-4">
                 <label
@@ -186,13 +158,8 @@ function Index() {
 
           {phase === "done" && (
             <div className="space-y-12">
-              {!finalLines && (
-                <p className="text-xs uppercase tracking-[0.25em] text-neutral-400">
-                  composing…
-                </p>
-              )}
               <ol className="space-y-4 font-serif">
-                {(finalLines ?? []).map((l, i) => (
+                {lines.map((l, i) => (
                   <li
                     key={i}
                     className={`text-2xl md:text-4xl italic leading-tight transition-all duration-700 ${
@@ -208,7 +175,7 @@ function Index() {
 
               <div
                 className={`flex gap-6 transition-opacity duration-700 ${
-                  finalLines && revealed >= finalLines.length ? "opacity-100" : "opacity-0"
+                  revealed >= lines.length ? "opacity-100" : "opacity-0"
                 }`}
               >
                 <button
