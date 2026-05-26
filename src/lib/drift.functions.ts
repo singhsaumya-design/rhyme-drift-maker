@@ -19,7 +19,7 @@ export const driftLine = createServerFn({ method: "POST" })
     const model = gateway("google/gemini-3-flash-preview");
 
     const system =
-      "You are Rhyme Drift, a minimal poetic engine. Given three user words, return EXACTLY ONE short line (max 8 words). The line should loosely rhyme or phonetically echo the user's words, slightly shift meaning, and feel intentional but slightly off. Tone: minimal, poetic, slightly imperfect. Prioritize rhyme, sound, and rhythm over correctness. No explanations, no quotes, no punctuation at the end other than a period if natural. Maintain continuity with previous lines if provided.";
+      "You are a minimal co-writing system. The user gave you 3 words. Generate exactly one short line — 3 to 6 words — that loosely rhymes with or phonetically echoes the input, slightly shifts the meaning, and feels like a fragment of a poem. Never explain. Never use random words. The line should feel intentional but slightly strange. Output the line only, nothing else.";
 
     const context =
       data.previousLines.length > 0
@@ -42,4 +42,35 @@ export const driftLine = createServerFn({ method: "POST" })
       .trim();
 
     return { line };
+  });
+
+const FinalizeInput = z.object({
+  lines: z.array(z.string().min(1)).length(3),
+});
+
+export const finalizeDrift = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => FinalizeInput.parse(input))
+  .handler(async ({ data }) => {
+    const key = process.env.LOVABLE_API_KEY;
+    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+
+    const gateway = createLovableAiGatewayProvider(key);
+    const model = gateway("google/gemini-3-flash-preview");
+
+    const prompt = `Here are three lines from a co-writing experiment: ${data.lines[0]}, ${data.lines[1]}, ${data.lines[2]}. Reorder or very lightly edit them so they read as one coherent 3-line poem. Change as little as possible. Output only the three lines, one per line, nothing else.`;
+
+    const { text } = await generateText({
+      model,
+      prompt,
+      temperature: 0.6,
+    });
+
+    const lines = text
+      .trim()
+      .split("\n")
+      .map((l) => l.replace(/^[-*•\d.)\s]+/, "").replace(/^["'`]+|["'`]+$/g, "").trim())
+      .filter(Boolean)
+      .slice(0, 3);
+
+    return { lines };
   });
