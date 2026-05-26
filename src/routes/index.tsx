@@ -25,7 +25,7 @@ function Index() {
   const [lines, setLines] = useState<string[]>([]);
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [revealed, setRevealed] = useState(0);
+  
   const inputRef = useRef<HTMLInputElement>(null);
   const feedEndRef = useRef<HTMLDivElement>(null);
 
