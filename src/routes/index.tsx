@@ -272,7 +272,9 @@ function Index() {
   );
 }
 
-function Bird({ className = "", delay = "0s", duration = "7s" }: { className?: string; delay?: string; duration?: string }) {
+function Bird({ className = "", delay = "0s", duration = "7s", color = "#4a2b5c" }: { className?: string; delay?: string; duration?: string; color?: string }) {
+  const wingFill = color;
+  const bodyFill = color;
   return (
     <svg
       aria-hidden
@@ -280,15 +282,36 @@ function Bird({ className = "", delay = "0s", duration = "7s" }: { className?: s
       className={`pointer-events-none absolute ${className}`}
       style={{ animation: `drift ${duration} ease-in-out infinite`, animationDelay: delay }}
     >
+      {/* far wing */}
       <path
-        d="M20 35 Q30 20 45 25 Q55 15 65 20 Q75 25 80 20 Q75 30 65 30 Q55 25 45 30 Q30 35 20 35Z"
-        fill="none"
-        stroke="#4a2b5c"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M24 32 C32 14 52 10 58 22 C52 20 36 24 24 32Z"
+        fill={wingFill}
         opacity="0.35"
       />
+      {/* body */}
+      <ellipse cx="58" cy="28" rx="14" ry="7" fill={bodyFill} opacity="0.45" />
+      {/* near wing */}
+      <path
+        d="M30 34 C38 12 62 8 70 22 C62 20 44 24 30 34Z"
+        fill={wingFill}
+        opacity="0.55"
+      />
+      {/* tail */}
+      <path
+        d="M44 28 L24 22 L28 30 Z"
+        fill={bodyFill}
+        opacity="0.4"
+      />
+      {/* head */}
+      <circle cx="70" cy="24" r="4.5" fill={bodyFill} opacity="0.6" />
+      {/* beak */}
+      <path
+        d="M73 24 L78 22 L73 26 Z"
+        fill={bodyFill}
+        opacity="0.7"
+      />
+      {/* eye */}
+      <circle cx="71" cy="23" r="1" fill="#ffffff" opacity="0.85" />
     </svg>
   );
 }
