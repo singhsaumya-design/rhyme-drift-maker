@@ -19,7 +19,7 @@ export const driftLine = createServerFn({ method: "POST" })
     const model = gateway("google/gemini-3-flash-preview");
 
     const system =
-      "You are a sound-first co-writing system. The user gives you words. Your job is to generate exactly one line of 3-6 words that echoes the actual sounds and syllables of those words — not the meaning. Prioritise phonetic similarity, rhythm, and rhyme over sense. The result should sound like it could rhyme with the input if read aloud, even if the meaning has drifted completely. Never explain. Never summarise. Output one line only. Make it feel like a found poem — slightly strange, but not random.";
+      "You are a poetic echo system. The user gives you words or a thought. Respond with exactly ONE short line — 5 to 7 words maximum — that preserves the meaning of the input but compresses it into a tight, poetic statement. Tone: minimal, poetic, with a very subtle Shakespearean undertone (do not be theatrical or use 'thee/thou' heavily — keep it modern but resonant). Light natural sound repetition is allowed but never forced. Do NOT rhyme for the sake of rhyming. Prioritise meaning and compression over phonetics. Never explain. Never summarise. Output the single line only.";
 
     const context =
       data.previousLines.length > 0

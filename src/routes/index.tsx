@@ -93,55 +93,92 @@ function Index() {
   const prompt = round === 1 ? "Type something to start writing a poem" : "keep going";
 
   return (
-    <main className="min-h-screen bg-[#fcfbf8] text-neutral-900 flex flex-col">
-      <header className="px-6 py-5 flex items-center justify-between">
-        <h1 className="text-sm tracking-[0.3em] uppercase text-neutral-500">
-          Rhyme Drift
-        </h1>
-        <span className="text-xs tracking-widest text-neutral-400 tabular-nums">
-          {phase === "done" ? "03 / 03" : `0${round} / 03`}
-        </span>
+    <main className="min-h-screen bg-[#fcfbf8] text-black flex flex-col font-mono">
+      {/* Grid header */}
+      <header className="grid grid-cols-12 border-b-[3px] border-black">
+        <div className="col-span-7 md:col-span-8 border-r-[3px] border-black px-4 py-3">
+          <h1 className="text-3xl md:text-5xl font-black uppercase leading-none tracking-tighter">
+            Rhyme<span className="inline-block bg-black text-[#fcfbf8] px-2 ml-1">Drift</span>
+          </h1>
+        </div>
+        <div className="col-span-3 md:col-span-2 border-r-[3px] border-black px-3 py-3 flex flex-col justify-between">
+          <span className="text-[10px] uppercase tracking-widest">round</span>
+          <span className="text-3xl md:text-4xl font-black tabular-nums leading-none">
+            {phase === "done" ? "03" : `0${round}`}
+          </span>
+        </div>
+        <div className="col-span-2 px-3 py-3 flex flex-col justify-between bg-black text-[#fcfbf8]">
+          <span className="text-[10px] uppercase tracking-widest">of</span>
+          <span className="text-3xl md:text-4xl font-black tabular-nums leading-none">03</span>
+        </div>
       </header>
 
-      <section className="flex-1 flex flex-col items-center px-6 overflow-hidden">
-        <div className="w-full max-w-xl flex-1 flex flex-col min-h-0">
-          {/* Persistent scrollable feed */}
-          <div className="flex-1 overflow-y-auto py-8 pr-2">
+      {/* Body grid */}
+      <section className="flex-1 grid grid-cols-12 min-h-0">
+        {/* Side rail */}
+        <aside className="hidden md:flex col-span-1 border-r-[3px] border-black flex-col items-center justify-between py-4">
+          <span className="text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl] rotate-180">
+            echo / system
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl] rotate-180">
+            input / you
+          </span>
+        </aside>
+
+        {/* Feed */}
+        <div className="col-span-12 md:col-span-11 flex flex-col min-h-0">
+          <div className="flex-1 overflow-y-auto">
             {feed.length === 0 && phase !== "done" && (
-              <p className="text-neutral-300 text-sm tracking-wider uppercase">
-                a blank page —
-              </p>
+              <div className="p-6 md:p-10">
+                <p className="text-[10px] uppercase tracking-[0.3em] mb-3">empty // waiting</p>
+                <p className="text-4xl md:text-6xl font-black uppercase leading-[0.95] tracking-tighter">
+                  type<br/>something.
+                </p>
+              </div>
             )}
-            <ul className="space-y-5">
+            <ul>
               {feed.map((item, i) => (
                 <li
                   key={i}
                   className={
-                    item.kind === "user"
-                      ? "text-lg md:text-xl font-light text-neutral-900 animate-[fadeUp_500ms_ease-out]"
-                      : "pl-8 md:pl-12 text-xl md:text-2xl italic font-serif text-neutral-600 leading-snug animate-[fadeUp_600ms_ease-out]"
+                    "grid grid-cols-12 border-b-[3px] border-black animate-[fadeUp_400ms_ease-out]"
                   }
                 >
-                  {item.kind === "user" ? (
-                    <>
-                      <span className="mr-3 text-[10px] tracking-[0.25em] uppercase text-neutral-400 align-middle">
-                        you
-                      </span>
-                      {item.text}
-                    </>
-                  ) : (
-                    <>
-                      <span className="mr-3 text-[10px] tracking-[0.25em] uppercase text-neutral-400 not-italic align-middle">
-                        drift
-                      </span>
-                      {item.text}
-                    </>
-                  )}
+                  <div
+                    className={
+                      "col-span-2 md:col-span-2 border-r-[3px] border-black px-2 py-3 flex items-start justify-center " +
+                      (item.kind === "user" ? "bg-[#fcfbf8]" : "bg-black text-[#fcfbf8]")
+                    }
+                  >
+                    <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold">
+                      {item.kind === "user" ? "you" : "echo"}
+                    </span>
+                  </div>
+                  <div className="col-span-10 px-4 py-4 md:py-5">
+                    {item.kind === "user" ? (
+                      <p className="text-xl md:text-2xl font-mono uppercase break-words">
+                        {item.text}
+                      </p>
+                    ) : (
+                      <p className="text-2xl md:text-4xl font-serif italic leading-tight break-words">
+                        “{item.text}”
+                      </p>
+                    )}
+                  </div>
                 </li>
               ))}
               {phase === "thinking" && (
-                <li className="pl-8 md:pl-12 text-sm italic text-neutral-400">
-                  drifting…
+                <li className="grid grid-cols-12 border-b-[3px] border-black">
+                  <div className="col-span-2 border-r-[3px] border-black px-2 py-3 flex items-start justify-center bg-black text-[#fcfbf8]">
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold animate-pulse">
+                      echo
+                    </span>
+                  </div>
+                  <div className="col-span-10 px-4 py-5">
+                    <p className="text-xl md:text-2xl font-mono uppercase tracking-tight">
+                      ▮ ▮ ▮ <span className="opacity-50">composing echo</span>
+                    </p>
+                  </div>
                 </li>
               )}
             </ul>
@@ -149,73 +186,72 @@ function Index() {
           </div>
 
           {phase !== "done" && (
-            <div className="border-t border-neutral-200 py-5">
-              <form onSubmit={submit} className="space-y-3">
-                <label
-                  htmlFor="words"
-                  className="block text-xs uppercase tracking-[0.25em] text-neutral-500"
-                >
-                  {prompt}
-                </label>
-                <div className="flex items-end gap-4">
-                  <input
-                    id="words"
-                    ref={inputRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    disabled={phase === "thinking"}
-                    autoComplete="off"
-                    spellCheck={false}
-                    className="flex-1 bg-transparent border-0 border-b border-neutral-300 focus:border-neutral-900 outline-none py-2 text-xl md:text-2xl font-light tracking-tight placeholder:text-neutral-300 transition-colors disabled:opacity-40"
-                    placeholder="Type here"
-                  />
-                  <button
-                    type="submit"
-                    disabled={phase === "thinking"}
-                    className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 disabled:opacity-30 transition pb-2"
-                  >
-                    {phase === "thinking" ? "…" : "Continue"}
-                  </button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`text-xs tracking-wider ${
-                      error ? "text-red-500" : "text-neutral-400"
-                    }`}
-                  >
-                    {error ?? (phase === "thinking" ? "drifting…" : "press enter")}
-                  </span>
-                </div>
-              </form>
-            </div>
+            <form
+              onSubmit={submit}
+              className="grid grid-cols-12 border-t-[3px] border-black"
+            >
+              <label
+                htmlFor="words"
+                className="col-span-12 px-4 pt-3 text-[10px] uppercase tracking-[0.3em] font-bold border-b border-dashed border-black/40"
+              >
+                {error ? <span className="text-red-600">{error}</span> : `// ${prompt}`}
+              </label>
+              <input
+                id="words"
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={phase === "thinking"}
+                autoComplete="off"
+                spellCheck={false}
+                className="col-span-9 md:col-span-10 bg-[#fcfbf8] border-r-[3px] border-black outline-none px-4 py-5 text-2xl md:text-3xl font-black uppercase tracking-tight placeholder:text-black/20 disabled:opacity-40"
+                placeholder="TYPE HERE"
+              />
+              <button
+                type="submit"
+                disabled={phase === "thinking"}
+                className="col-span-3 md:col-span-2 bg-black text-[#fcfbf8] text-sm md:text-base uppercase tracking-widest font-black hover:bg-[#fcfbf8] hover:text-black transition-colors disabled:opacity-30 px-2 py-5"
+              >
+                {phase === "thinking" ? "…" : "GO →"}
+              </button>
+            </form>
           )}
 
           {phase === "done" && (
-            <div className="border-t border-neutral-200 py-6 flex gap-6">
+            <div className="grid grid-cols-12 border-t-[3px] border-black">
+              <div className="col-span-12 px-4 py-4 bg-black text-[#fcfbf8]">
+                <p className="text-[10px] uppercase tracking-[0.3em] font-bold">
+                  // drift complete
+                </p>
+              </div>
               <button
                 onClick={tryAgain}
-                className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 underline-offset-4 hover:underline"
+                className="col-span-6 border-r-[3px] border-black bg-[#fcfbf8] text-black uppercase tracking-widest font-black text-lg md:text-2xl py-6 hover:bg-black hover:text-[#fcfbf8] transition-colors"
               >
-                Try again
+                Try again ↺
               </button>
               <button
                 onClick={newDrift}
-                className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 underline-offset-4 hover:underline"
+                className="col-span-6 bg-black text-[#fcfbf8] uppercase tracking-widest font-black text-lg md:text-2xl py-6 hover:bg-[#fcfbf8] hover:text-black transition-colors"
               >
-                New drift
+                New drift ✦
               </button>
             </div>
           )}
         </div>
       </section>
 
-      <footer className="px-6 py-5 text-[10px] tracking-[0.3em] uppercase text-neutral-400">
-        a constrained co-writing loop
+      <footer className="grid grid-cols-12 border-t-[3px] border-black text-[10px] uppercase tracking-[0.25em] font-bold">
+        <div className="col-span-4 px-4 py-2 border-r-[3px] border-black">echo system v.02</div>
+        <div className="col-span-4 px-4 py-2 border-r-[3px] border-black text-center">
+          meaning &gt; rhyme
+        </div>
+        <div className="col-span-4 px-4 py-2 text-right">press enter ⏎</div>
       </footer>
 
       <style>{`
         @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(6px); }
+          from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
