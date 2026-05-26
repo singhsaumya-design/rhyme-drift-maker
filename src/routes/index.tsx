@@ -122,12 +122,12 @@ function Index() {
           filter: "blur(20px)",
         }}
       />
-      {/* Floating clouds */}
-      <Cloud className="top-[14%] left-[6%] w-20 opacity-90" delay="0s" />
-      <Cloud className="top-[22%] right-[8%] w-24 opacity-80" delay="1.5s" />
-      <Cloud className="top-[55%] left-[10%] w-16 opacity-85" delay="0.8s" />
-      <Cloud className="top-[48%] right-[12%] w-28 opacity-90" delay="2.2s" />
-      <Cloud className="top-[70%] left-[40%] w-20 opacity-70" delay="1s" />
+      {/* Floating birds */}
+      <Bird className="top-[14%] left-[6%] w-10 opacity-70" delay="0s" duration="6s" />
+      <Bird className="top-[22%] right-[8%] w-12 opacity-60" delay="1.5s" duration="7.5s" />
+      <Bird className="top-[55%] left-[10%] w-8 opacity-65" delay="0.8s" duration="5.5s" />
+      <Bird className="top-[48%] right-[12%] w-14 opacity-70" delay="2.2s" duration="8s" />
+      <Bird className="top-[70%] left-[40%] w-10 opacity-50" delay="1s" duration="6.5s" />
 
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-6 md:px-10 py-5 text-xs tracking-wide lowercase text-[#3b2f55]">
@@ -272,24 +272,23 @@ function Index() {
   );
 }
 
-function Cloud({ className = "", delay = "0s" }: { className?: string; delay?: string }) {
+function Bird({ className = "", delay = "0s", duration = "7s" }: { className?: string; delay?: string; duration?: string }) {
   return (
     <svg
       aria-hidden
       viewBox="0 0 120 60"
       className={`pointer-events-none absolute ${className}`}
-      style={{ animation: "drift 7s ease-in-out infinite", animationDelay: delay }}
+      style={{ animation: `drift ${duration} ease-in-out infinite`, animationDelay: delay }}
     >
-      <defs>
-        <radialGradient id="cg" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-          <stop offset="70%" stopColor="#e9d6e6" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#c9a8d4" stopOpacity="0.4" />
-        </radialGradient>
-      </defs>
-      <ellipse cx="40" cy="38" rx="28" ry="16" fill="url(#cg)" />
-      <ellipse cx="70" cy="32" rx="32" ry="18" fill="url(#cg)" />
-      <ellipse cx="92" cy="40" rx="22" ry="13" fill="url(#cg)" />
+      <path
+        d="M20 35 Q30 20 45 25 Q55 15 65 20 Q75 25 80 20 Q75 30 65 30 Q55 25 45 30 Q30 35 20 35Z"
+        fill="none"
+        stroke="#4a2b5c"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.35"
+      />
     </svg>
   );
 }
