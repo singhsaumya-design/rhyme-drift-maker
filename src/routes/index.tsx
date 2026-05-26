@@ -123,11 +123,11 @@ function Index() {
         }}
       />
       {/* Floating birds */}
-      <Bird className="top-[14%] left-[6%] w-10 opacity-80" delay="0s" duration="6s" color="#c5547a" />
-      <Bird className="top-[22%] right-[8%] w-12 opacity-75" delay="1.5s" duration="7.5s" color="#f48a5e" />
-      <Bird className="top-[55%] left-[10%] w-8 opacity-80" delay="0.8s" duration="5.5s" color="#7a5fa0" />
-      <Bird className="top-[48%] right-[12%] w-14 opacity-70" delay="2.2s" duration="8s" color="#d66d8a" />
-      <Bird className="top-[70%] left-[40%] w-10 opacity-60" delay="1s" duration="6.5s" color="#ec7a6e" />
+      <Bird className="top-[12%] left-[4%] w-14 opacity-80" delay="0s" duration="5.5s" color="#c5547a" />
+      <Bird className="top-[20%] right-[6%] w-16 opacity-75" delay="1.5s" duration="7s" color="#f48a5e" />
+      <Bird className="top-[52%] left-[8%] w-12 opacity-80" delay="0.8s" duration="5s" color="#7a5fa0" />
+      <Bird className="top-[44%] right-[10%] w-20 opacity-70" delay="2.2s" duration="7.5s" color="#d66d8a" />
+      <Bird className="top-[68%] left-[36%] w-14 opacity-60" delay="1s" duration="6s" color="#ec7a6e" />
 
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-6 md:px-10 py-5 text-xs tracking-wide lowercase text-[#3b2f55]">
