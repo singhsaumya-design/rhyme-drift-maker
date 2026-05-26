@@ -197,7 +197,6 @@ function Index() {
                 </li>
               )}
             </ul>
-            <div ref={feedEndRef} />
           </div>
 
           {phase !== "done" && (
