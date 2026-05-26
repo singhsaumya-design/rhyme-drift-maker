@@ -25,16 +25,19 @@ function Index() {
   const [lines, setLines] = useState<string[]>([]);
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const feedEndRef = useRef<HTMLDivElement>(null);
+  const feedContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (phase === "input") inputRef.current?.focus();
   }, [phase, round]);
 
   useEffect(() => {
-    feedEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const el = feedContainerRef.current;
+    if (el) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    }
   }, [feed, phase]);
 
   async function submit(e: FormEvent) {
