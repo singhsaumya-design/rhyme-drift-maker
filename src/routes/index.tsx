@@ -203,42 +203,19 @@ function Index() {
           )}
 
           {phase === "done" && (
-            <div className="border-t border-neutral-200 py-6 space-y-5">
-              <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
-                the drift — final
-              </p>
-              <ol className="space-y-2 font-serif">
-                {lines.map((l, i) => (
-                  <li
-                    key={i}
-                    className={`text-xl md:text-2xl italic leading-snug transition-all duration-700 ${
-                      i < revealed
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2"
-                    }`}
-                  >
-                    {l}
-                  </li>
-                ))}
-              </ol>
-              <div
-                className={`flex gap-6 pt-2 transition-opacity duration-700 ${
-                  revealed >= lines.length ? "opacity-100" : "opacity-0"
-                }`}
+            <div className="border-t border-neutral-200 py-6 flex gap-6">
+              <button
+                onClick={tryAgain}
+                className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 underline-offset-4 hover:underline"
               >
-                <button
-                  onClick={tryAgain}
-                  className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 underline-offset-4 hover:underline"
-                >
-                  Try again
-                </button>
-                <button
-                  onClick={newDrift}
-                  className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 underline-offset-4 hover:underline"
-                >
-                  New drift
-                </button>
-              </div>
+                Try again
+              </button>
+              <button
+                onClick={newDrift}
+                className="text-xs uppercase tracking-[0.25em] text-neutral-700 hover:text-neutral-900 underline-offset-4 hover:underline"
+              >
+                New drift
+              </button>
             </div>
           )}
         </div>
