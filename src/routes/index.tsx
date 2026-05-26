@@ -93,92 +93,101 @@ function Index() {
   const prompt = round === 1 ? "Type something to start writing a poem" : "keep going";
 
   return (
-    <main className="min-h-screen bg-[#fcfbf8] text-black flex flex-col font-mono">
-      {/* Grid header */}
-      <header className="grid grid-cols-12 border-b-[3px] border-black">
-        <div className="col-span-7 md:col-span-8 border-r-[3px] border-black px-4 py-3">
-          <h1 className="text-3xl md:text-5xl font-black uppercase leading-none tracking-tighter">
-            Rhyme<span className="inline-block bg-black text-[#fcfbf8] px-2 ml-1">Drift</span>
-          </h1>
-        </div>
-        <div className="col-span-3 md:col-span-2 border-r-[3px] border-black px-3 py-3 flex flex-col justify-between">
-          <span className="text-[10px] uppercase tracking-widest">round</span>
-          <span className="text-3xl md:text-4xl font-black tabular-nums leading-none">
-            {phase === "done" ? "03" : `0${round}`}
-          </span>
-        </div>
-        <div className="col-span-2 px-3 py-3 flex flex-col justify-between bg-black text-[#fcfbf8]">
-          <span className="text-[10px] uppercase tracking-widest">of</span>
-          <span className="text-3xl md:text-4xl font-black tabular-nums leading-none">03</span>
-        </div>
+    <main
+      className="relative min-h-screen flex flex-col overflow-hidden"
+      style={{
+        fontFamily: '"Inter", system-ui, sans-serif',
+        color: "#2a2342",
+        background:
+          "linear-gradient(180deg, #cfe6f3 0%, #d8e5f0 40%, #f5cfc5 70%, #e8b3c4 90%, #c9a8d4 100%)",
+      }}
+    >
+      {/* Sun */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-[8%] w-[120vw] max-w-[1100px] aspect-square rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 45%, #ffb27a 0%, #f48a5e 45%, #ec7a6e 70%, rgba(236,122,110,0) 78%)",
+          filter: "blur(1px)",
+        }}
+      />
+      {/* Soft mist at bottom */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[40%]"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(245,207,197,0.5) 40%, rgba(201,168,212,0.7) 100%)",
+          filter: "blur(20px)",
+        }}
+      />
+      {/* Floating clouds */}
+      <Cloud className="top-[14%] left-[6%] w-20 opacity-90" delay="0s" />
+      <Cloud className="top-[22%] right-[8%] w-24 opacity-80" delay="1.5s" />
+      <Cloud className="top-[55%] left-[10%] w-16 opacity-85" delay="0.8s" />
+      <Cloud className="top-[48%] right-[12%] w-28 opacity-90" delay="2.2s" />
+      <Cloud className="top-[70%] left-[40%] w-20 opacity-70" delay="1s" />
+
+      {/* Header */}
+      <header className="relative z-10 flex items-center justify-between px-6 md:px-10 py-5 text-xs tracking-wide lowercase text-[#3b2f55]">
+        <span>rhyme drift</span>
+        <span className="tabular-nums">
+          {phase === "done" ? "03 / 03" : `0${round} / 03`}
+        </span>
       </header>
 
-      {/* Body grid */}
-      <section className="flex-1 grid grid-cols-12 min-h-0">
-        {/* Side rail */}
-        <aside className="hidden md:flex col-span-1 border-r-[3px] border-black flex-col items-center justify-between py-4">
-          <span className="text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl] rotate-180">
-            echo / system
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl] rotate-180">
-            input / you
-          </span>
-        </aside>
-
-        {/* Feed */}
-        <div className="col-span-12 md:col-span-11 flex flex-col min-h-0">
-          <div className="flex-1 overflow-y-auto">
+      {/* Main content */}
+      <section className="relative z-10 flex-1 flex flex-col items-center px-4 md:px-6 pb-6 min-h-0">
+        <div className="w-full max-w-2xl flex-1 flex flex-col min-h-0">
+          {/* Feed */}
+          <div className="flex-1 overflow-y-auto py-6 pr-1 scroll-smooth">
             {feed.length === 0 && phase !== "done" && (
-              <div className="p-6 md:p-10">
-                <p className="text-[10px] uppercase tracking-[0.3em] mb-3">empty // waiting</p>
-                <p className="text-4xl md:text-6xl font-black uppercase leading-[0.95] tracking-tighter">
-                  type<br/>something.
-                </p>
-              </div>
+              <p
+                className="text-center text-[#3b2f55]/70 italic text-lg md:text-xl"
+                style={{ fontFamily: '"Instrument Serif", serif' }}
+              >
+                a soft beginning &mdash; type something
+              </p>
             )}
-            <ul>
+            <ul className="space-y-6">
               {feed.map((item, i) => (
                 <li
                   key={i}
-                  className={
-                    "grid grid-cols-12 border-b-[3px] border-black animate-[fadeUp_400ms_ease-out]"
-                  }
+                  className="animate-[fadeUp_600ms_ease-out]"
                 >
-                  <div
-                    className={
-                      "col-span-2 md:col-span-2 border-r-[3px] border-black px-2 py-3 flex items-start justify-center " +
-                      (item.kind === "user" ? "bg-[#fcfbf8]" : "bg-black text-[#fcfbf8]")
-                    }
-                  >
-                    <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold">
-                      {item.kind === "user" ? "you" : "echo"}
-                    </span>
-                  </div>
-                  <div className="col-span-10 px-4 py-4 md:py-5">
-                    {item.kind === "user" ? (
-                      <p className="text-xl md:text-2xl font-mono uppercase break-words">
+                  {item.kind === "user" ? (
+                    <div className="flex flex-col items-start">
+                      <span className="text-[10px] lowercase tracking-[0.3em] text-[#6b5b8a] mb-1">
+                        you whispered
+                      </span>
+                      <p className="text-xl md:text-2xl text-[#2a2342] lowercase italic" style={{ fontFamily: '"Instrument Serif", serif' }}>
                         {item.text}
                       </p>
-                    ) : (
-                      <p className="text-2xl md:text-4xl font-serif italic leading-tight break-words">
-                        “{item.text}”
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-end text-right">
+                      <span className="text-[10px] lowercase tracking-[0.3em] text-[#c5648a] mb-1">
+                        the sky replied
+                      </span>
+                      <p
+                        className="text-2xl md:text-4xl leading-[1.15] text-[#4a2b5c]"
+                        style={{ fontFamily: '"Instrument Serif", serif', fontStyle: "italic" }}
+                      >
+                        {item.text}
                       </p>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </li>
               ))}
               {phase === "thinking" && (
-                <li className="grid grid-cols-12 border-b-[3px] border-black">
-                  <div className="col-span-2 border-r-[3px] border-black px-2 py-3 flex items-start justify-center bg-black text-[#fcfbf8]">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold animate-pulse">
-                      echo
-                    </span>
-                  </div>
-                  <div className="col-span-10 px-4 py-5">
-                    <p className="text-xl md:text-2xl font-mono uppercase tracking-tight">
-                      ▮ ▮ ▮ <span className="opacity-50">composing echo</span>
-                    </p>
-                  </div>
+                <li className="flex flex-col items-end text-right animate-pulse">
+                  <span className="text-[10px] lowercase tracking-[0.3em] text-[#c5648a] mb-1">
+                    the sky is humming
+                  </span>
+                  <p className="text-xl md:text-2xl italic text-[#6b5b8a]" style={{ fontFamily: '"Instrument Serif", serif' }}>
+                    &#8230;
+                  </p>
                 </li>
               )}
             </ul>
@@ -186,75 +195,101 @@ function Index() {
           </div>
 
           {phase !== "done" && (
-            <form
-              onSubmit={submit}
-              className="grid grid-cols-12 border-t-[3px] border-black"
-            >
+            <form onSubmit={submit} className="pt-4">
               <label
                 htmlFor="words"
-                className="col-span-12 px-4 pt-3 text-[10px] uppercase tracking-[0.3em] font-bold border-b border-dashed border-black/40"
+                className="block text-center text-[11px] lowercase tracking-[0.3em] text-[#6b5b8a] mb-3"
               >
-                {error ? <span className="text-red-600">{error}</span> : `// ${prompt}`}
+                {error ? <span className="text-[#b94a6c]">{error}</span> : prompt}
               </label>
-              <input
-                id="words"
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={phase === "thinking"}
-                autoComplete="off"
-                spellCheck={false}
-                className="col-span-9 md:col-span-10 bg-[#fcfbf8] border-r-[3px] border-black outline-none px-4 py-5 text-2xl md:text-3xl font-black uppercase tracking-tight placeholder:text-black/20 disabled:opacity-40"
-                placeholder="TYPE HERE"
-              />
-              <button
-                type="submit"
-                disabled={phase === "thinking"}
-                className="col-span-3 md:col-span-2 bg-black text-[#fcfbf8] text-sm md:text-base uppercase tracking-widest font-black hover:bg-[#fcfbf8] hover:text-black transition-colors disabled:opacity-30 px-2 py-5"
+              <div
+                className="flex items-center gap-3 rounded-full bg-white/45 backdrop-blur-md px-5 py-3 shadow-[0_10px_40px_-15px_rgba(74,43,92,0.35)] border border-white/60"
               >
-                {phase === "thinking" ? "…" : "GO →"}
-              </button>
+                <input
+                  id="words"
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={phase === "thinking"}
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder="type here"
+                  className="flex-1 bg-transparent outline-none border-0 text-lg md:text-xl text-[#2a2342] placeholder:text-[#6b5b8a]/50 lowercase italic disabled:opacity-40"
+                  style={{ fontFamily: '"Instrument Serif", serif' }}
+                />
+                <button
+                  type="submit"
+                  disabled={phase === "thinking"}
+                  className="text-xs lowercase tracking-[0.25em] px-4 py-2 rounded-full bg-[#4a2b5c] text-[#fde6d8] hover:bg-[#6b3d80] transition-colors disabled:opacity-40"
+                >
+                  {phase === "thinking" ? "drifting" : "continue ↦"}
+                </button>
+              </div>
+              <p className="mt-2 text-center text-[10px] lowercase tracking-[0.25em] text-[#6b5b8a]/70">
+                press enter to drift
+              </p>
             </form>
           )}
 
           {phase === "done" && (
-            <div className="grid grid-cols-12 border-t-[3px] border-black">
-              <div className="col-span-12 px-4 py-4 bg-black text-[#fcfbf8]">
-                <p className="text-[10px] uppercase tracking-[0.3em] font-bold">
-                  // drift complete
-                </p>
-              </div>
+            <div className="pt-6 flex flex-wrap justify-center gap-3">
               <button
                 onClick={tryAgain}
-                className="col-span-6 border-r-[3px] border-black bg-[#fcfbf8] text-black uppercase tracking-widest font-black text-lg md:text-2xl py-6 hover:bg-black hover:text-[#fcfbf8] transition-colors"
+                className="text-sm lowercase tracking-[0.2em] px-6 py-3 rounded-full bg-white/55 backdrop-blur-md border border-white/70 text-[#4a2b5c] hover:bg-white/75 transition-colors"
+                style={{ fontFamily: '"Instrument Serif", serif', fontStyle: "italic" }}
               >
-                Try again ↺
+                try again
               </button>
               <button
                 onClick={newDrift}
-                className="col-span-6 bg-black text-[#fcfbf8] uppercase tracking-widest font-black text-lg md:text-2xl py-6 hover:bg-[#fcfbf8] hover:text-black transition-colors"
+                className="text-sm lowercase tracking-[0.2em] px-6 py-3 rounded-full bg-[#4a2b5c] text-[#fde6d8] hover:bg-[#6b3d80] transition-colors"
+                style={{ fontFamily: '"Instrument Serif", serif', fontStyle: "italic" }}
               >
-                New drift ✦
+                a new drift
               </button>
             </div>
           )}
         </div>
       </section>
 
-      <footer className="grid grid-cols-12 border-t-[3px] border-black text-[10px] uppercase tracking-[0.25em] font-bold">
-        <div className="col-span-4 px-4 py-2 border-r-[3px] border-black">echo system v.02</div>
-        <div className="col-span-4 px-4 py-2 border-r-[3px] border-black text-center">
-          meaning &gt; rhyme
-        </div>
-        <div className="col-span-4 px-4 py-2 text-right">press enter ⏎</div>
+      <footer
+        className="relative z-10 text-center pb-5 text-[10px] lowercase tracking-[0.3em] text-[#4a2b5c]/60"
+      >
+        a small place to feel something
       </footer>
 
       <style>{`
         @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(8px); }
+          from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes drift {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
         }
       `}</style>
     </main>
+  );
+}
+
+function Cloud({ className = "", delay = "0s" }: { className?: string; delay?: string }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 120 60"
+      className={`pointer-events-none absolute ${className}`}
+      style={{ animation: "drift 7s ease-in-out infinite", animationDelay: delay }}
+    >
+      <defs>
+        <radialGradient id="cg" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+          <stop offset="70%" stopColor="#e9d6e6" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#c9a8d4" stopOpacity="0.4" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="40" cy="38" rx="28" ry="16" fill="url(#cg)" />
+      <ellipse cx="70" cy="32" rx="32" ry="18" fill="url(#cg)" />
+      <ellipse cx="92" cy="40" rx="22" ry="13" fill="url(#cg)" />
+    </svg>
   );
 }
