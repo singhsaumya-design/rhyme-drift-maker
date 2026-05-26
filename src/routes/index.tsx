@@ -102,7 +102,7 @@ function Index() {
     setPhase("input");
   }
 
-  const prompt = round === 1 ? "Type something fun" : "keep going";
+  const prompt = round === 1 ? "Type something to start writing a poem" : "keep going";
 
   return (
     <main className="min-h-screen bg-[#fcfbf8] text-neutral-900 flex flex-col">
