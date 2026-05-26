@@ -97,7 +97,7 @@ function Index() {
 
   return (
     <main
-      className="relative min-h-screen flex flex-col overflow-hidden"
+      className="relative h-screen flex flex-col overflow-hidden"
       style={{
         fontFamily: '"Inter", system-ui, sans-serif',
         color: "#2a2342",
