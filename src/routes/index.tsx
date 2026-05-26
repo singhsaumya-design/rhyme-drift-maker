@@ -144,7 +144,9 @@ function Index() {
       <section className="relative z-10 flex-1 flex flex-col items-center px-4 md:px-6 pb-6 min-h-0 pt-[42vh]">
         <div className="w-full max-w-xl flex-1 flex flex-col min-h-0 items-center">
           {/* Feed */}
-          <div className="w-full flex-1 overflow-y-auto py-6 scroll-smooth">
+          <div
+            ref={feedContainerRef}
+            className="w-full flex-1 overflow-y-auto py-6 scroll-smooth min-h-0"
             {feed.length === 0 && phase !== "done" && (
               <p
                 className="text-center text-[#3b2f55]/70 italic text-lg md:text-xl"
