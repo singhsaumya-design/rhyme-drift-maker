@@ -147,6 +147,7 @@ function Index() {
           <div
             ref={feedContainerRef}
             className="w-full flex-1 overflow-y-auto py-6 scroll-smooth min-h-0"
+          >
             {feed.length === 0 && phase !== "done" && (
               <p
                 className="text-center text-[#3b2f55]/70 italic text-lg md:text-xl"
