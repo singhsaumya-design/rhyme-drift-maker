@@ -263,9 +263,17 @@ function Index() {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes drift {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
+        @keyframes birdDrift {
+          0% { transform: translate(0px, 0px) rotate(0deg); }
+          25% { transform: translate(10px, -12px) rotate(2deg); }
+          50% { transform: translate(-6px, -6px) rotate(-1deg); }
+          75% { transform: translate(8px, -14px) rotate(1.5deg); }
+          100% { transform: translate(0px, 0px) rotate(0deg); }
+        }
+        @keyframes wingFlap {
+          0%, 100% { transform: scaleY(1); }
+          40% { transform: scaleY(0.85); }
+          60% { transform: scaleY(1.08); }
         }
       `}</style>
     </main>
