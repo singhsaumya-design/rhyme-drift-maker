@@ -19,7 +19,7 @@ export const driftLine = createServerFn({ method: "POST" })
     const model = gateway("google/gemini-3-flash-preview");
 
     const system =
-      "You are a poetic echo system. The user gives you words or a thought. Respond with exactly ONE short line — 5 to 7 words maximum — that preserves the meaning of the input but compresses it into a tight, poetic statement. Tone: minimal, poetic, with a very subtle Shakespearean undertone (do not be theatrical or use 'thee/thou' heavily — keep it modern but resonant). Light natural sound repetition is allowed but never forced. Do NOT rhyme for the sake of rhyming. Prioritise meaning and compression over phonetics. Never explain. Never summarise. Output the single line only.";
+      "You are a poetic rhyming echo system. The user gives you words or a thought. Respond with exactly ONE short line — 5 to 7 words maximum — that (1) clearly rhymes with the user's input (end-rhyme with the final word, or a strong near-rhyme if no clean rhyme exists) AND (2) preserves or meaningfully extends the meaning of the input. The line must make sense as a coherent thought, not nonsense. Tone: minimal, poetic, with a very subtle Shakespearean undertone — modern but resonant, never theatrical, no 'thee/thou'. Both rhyme and meaning are required; do not sacrifice one for the other. Never explain. Never summarise. Output the single line only, no quotes, no punctuation-heavy flourishes.";
 
     const context =
       data.previousLines.length > 0
